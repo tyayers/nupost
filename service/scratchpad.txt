@@ -1,0 +1,19 @@
+# Start service
+export GCLOUD_PROJECT=cloud32x
+go run .
+
+# Do a small load test for creating posts
+hey -n 200 -c 10 -m POST -D "./examples/post1.json" http://localhost:8080/posts
+
+# Attach file to post
+curl -X POST http://localhost:8080/posts/oJnNPGsi/files \
+  -F "file=@./examples/file.png" \
+  -H "Content-Type: multipart/form-data"
+
+# Force reinit of data
+curl -X POST http://localhost:8080/admin/reload
+curl -X POST https://cms2-service-ghfontasua-ew.a.run.app/admin/reload
+
+# Force persist of data
+curl -X POST http://localhost:8080/admin/reload
+curl -X POST https://cms2-service-ghfontasua-ew.a.run.app/admin/persist
