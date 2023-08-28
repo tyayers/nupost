@@ -13,6 +13,8 @@ type PostIndex struct {
 	IndexCountComments      map[string]int
 	IndexCountViews         map[string]int
 	IndexUsers              map[string]User
+	IndexUsersFollowers     map[string]map[string]string
+	IndexUsersFollowing     map[string]map[string]string
 }
 
 type PostHeader struct {
@@ -27,6 +29,7 @@ type PostHeader struct {
 	AuthorDisplayName string   `json:"authorDisplayName"`
 	AuthorProfilePic  string   `json:"authorProfilePic"`
 	Author            User     `json:"author"`
+	UserFollowing     bool     `json:"userFollowing"`
 	Created           string   `json:"created"`
 	Index             int      `json:"index"`
 	Updated           string   `json:"updated"`
@@ -54,18 +57,22 @@ type Post struct {
 }
 
 type User struct {
-	UID           string `json:"uid"`
-	DisplayName   string `json:"displayName"`
-	Email         string `json:"-"`
-	ProfileText   string `json:"profileText"`
-	PhotoURL      string `json:"photoURL"`
-	ProviderId    string `json:"-"`
-	EmailVerified bool   `json:"-"`
-	IsAnonymous   bool   `json:"-"`
-	Registered    string `json:"registered"`
-	Followers     int    `json:"followers"`
-	Following     int    `json:"following"`
-	PostCount     int    `json:"postCount"`
+	UID            string `json:"uid"`
+	DisplayName    string `json:"displayName"`
+	Email          string `json:"-"`
+	ProfileText    string `json:"profileText"`
+	PhotoURL       string `json:"photoURL"`
+	ProviderId     string `json:"-"`
+	EmailVerified  bool   `json:"-"`
+	IsAnonymous    bool   `json:"-"`
+	Registered     string `json:"registered"`
+	FollowersCount int    `json:"followers"`
+	FollowingCount int    `json:"following"`
+	PostsCount     int    `json:"postCount"`
+}
+
+type UserFollow struct {
+	UID string `json:"uid"`
 }
 
 type SearchResult struct {
@@ -110,4 +117,5 @@ const (
 	PersistOnlyDrafts
 	PersistOnlyDeleted
 	PersistOnlyUsers
+	PersistOnlyUsersFollowers
 )

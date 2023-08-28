@@ -105,6 +105,18 @@ func InitializeProvider() data.PostIndex {
 		json.Unmarshal(postBytes, &index.IndexUsers)
 	}
 
+	postBytes, err = dataProvider.DownloadFile("index_users_followers.json")
+
+	if err == nil {
+		json.Unmarshal(postBytes, &index.IndexUsersFollowers)
+	}
+
+	postBytes, err = dataProvider.DownloadFile("index_users_following.json")
+
+	if err == nil {
+		json.Unmarshal(postBytes, &index.IndexUsersFollowing)
+	}
+
 	return index
 }
 
@@ -243,6 +255,25 @@ func FinalizeProvider(persistMode data.PersistMode, index data.PostIndex) {
 		}
 
 		dataProvider.UploadFile("index_users.json", jsonData)
+	}
+
+	// Persist users followers
+	if persistMode == data.PersistAll || persistMode == data.PersistOnlyUsersFollowers {
+		jsonData, err := json.Marshal(index.IndexUsersFollowers)
+		if err != nil {
+			fmt.Printf("could not marshal json: %s\n", err)
+			return
+		}
+
+		dataProvider.UploadFile("index_users_followers.json", jsonData)
+
+		jsonData, err = json.Marshal(index.IndexUsersFollowing)
+		if err != nil {
+			fmt.Printf("could not marshal json: %s\n", err)
+			return
+		}
+
+		dataProvider.UploadFile("index_users_following.json", jsonData)
 	}
 }
 

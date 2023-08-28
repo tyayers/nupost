@@ -34,6 +34,19 @@ func signIn(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+func followUser(c *gin.Context) {
+	var userFollowData data.UserFollow // Call BindJSON to deserialize
+
+	if err := c.BindJSON(&userFollowData); err != nil {
+		return
+	}
+
+}
+
+func unFollowUser(c *gin.Context) {
+
+}
+
 func getData(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, content.GetData())
 }
@@ -49,6 +62,7 @@ func persist(c *gin.Context) {
 }
 
 func getPosts(c *gin.Context) {
+	userId := c.GetString("user_id")
 	start, err := strconv.Atoi(c.Query("start"))
 	if err != nil {
 		start = 0
@@ -59,7 +73,7 @@ func getPosts(c *gin.Context) {
 		limit = 20
 	}
 
-	c.IndentedJSON(http.StatusOK, content.GetPosts(start, limit))
+	c.IndentedJSON(http.StatusOK, content.GetPosts(start, limit, userId))
 }
 
 func getPopularPosts(c *gin.Context) {

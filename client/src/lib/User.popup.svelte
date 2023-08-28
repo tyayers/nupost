@@ -23,6 +23,9 @@
   <div class="popup_menu">
     <div class="popup_menu_inner">
       {user.displayName}
+
+      <button>Follow</button>
+
     </div>
   </div>
 </div>

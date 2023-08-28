@@ -31,6 +31,8 @@
     localUser = value;
   });
 
+  document.title = import.meta.env.VITE_APP_NAME;
+
   function goHome() {
     if (localUserState === UserState.SignedIn) goto("/home");
     else goto("/");
@@ -63,7 +65,7 @@
     <div class="logo_box" on:click={goHome} on:keydown={goHome}>
       <!-- <img class="logo" src={LogoPath} alt="Site logo" /> -->
       <!-- <span class="title">ggo-1 blog</span> -->
-      <span class="title">Nup</span>
+      <span class="title">{import.meta.env.VITE_APP_NAME}</span>
     </div>
     {#if showSearch}
       <SearchBox search={searchPosts} on:click={searchClick} />

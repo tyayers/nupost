@@ -148,12 +148,56 @@ func SignIn(user data.User) {
 	go Finalize(data.PersistOnlyUsers)
 }
 
+func FollowUser(userId string, userToFollow string) {
+	usersMutex.Lock()
+	index.IndexUsersFollowers[userToFollow][userId] = userId
+	index.IndexUsersFollowing[userId][userToFollow] = userToFollow
+
+	val, ok := index.IndexUsers[userToFollow]
+	if ok {
+		val.FollowersCount++
+		index.IndexUsers[userToFollow] = val
+	}
+
+	val, ok = index.IndexUsers[userId]
+	if ok {
+		val.FollowingCount++
+		index.IndexUsers[userId] = val
+	}
+
+	usersMutex.Unlock()
+
+	go Finalize(data.PersistOnlyUsers)
+}
+
+func UnFollowUser(userId string, userToUnFollow string) {
+	usersMutex.Lock()
+	delete(index.IndexUsersFollowers[userToUnFollow], userId)
+	delete(index.IndexUsersFollowing[userId], userToUnFollow)
+
+	val, ok := index.IndexUsers[userToUnFollow]
+	if ok {
+		val.FollowersCount--
+		index.IndexUsers[userToUnFollow] = val
+	}
+
+	val, ok = index.IndexUsers[userId]
+	if ok {
+		val.FollowingCount--
+		index.IndexUsers[userId] = val
+	}
+
+	usersMutex.Unlock()
+
+	go Finalize(data.PersistOnlyUsers)
+}
+
 func GetData() data.Metadata {
 	result := data.Metadata{PostCount: len(index.IndexTime), DraftCount: len(index.IndexDrafts), DeletedCount: len(index.IndexDeleted)}
 	return result
 }
 
-func GetPosts(start int, limit int) []data.PostHeader {
+func GetPosts(start int, limit int, userId string) []data.PostHeader {
 	resultPosts := []data.PostHeader{}
 
 	if len(index.IndexTime) > 0 {
@@ -166,6 +210,15 @@ func GetPosts(start int, limit int) []data.PostHeader {
 				post.Upvotes = index.IndexCountLikes[post.Id]
 				post.CommentCount = index.IndexCountComments[post.Id]
 				post.Author = index.IndexUsers[post.AuthorId]
+
+				// Test if user is following post author
+				_, ok := index.IndexUsersFollowers[post.AuthorId][userId]
+				if ok {
+					post.UserFollowing = true
+				} else {
+					post.UserFollowing = false
+				}
+
 				resultPosts = append(resultPosts, post)
 			}
 
