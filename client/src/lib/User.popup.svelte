@@ -6,6 +6,8 @@
 
   export let user: AppUser
   export let localUser: AppUser
+  export let userFollowing: boolean
+  export let size: string
 
   function onMouseEnter() {
     if (onEnter) onEnter();
@@ -16,24 +18,34 @@
   }
 </script>
 
-<div class="popup_menu_panel" 
+<div class={"popup_menu_panel_" + size }
     on:mouseenter={onMouseEnter}
     on:mouseleave={onMouseLeave}>
-  <div class="popup_menu_arrow" />
+  <div class={"popup_menu_arrow " + "popup_menu_arrow_position_" + size} />
   <div class="popup_menu">
     <div class="popup_menu_inner">
       {user.displayName}
 
-      <button>Follow</button>
+      {#if user.uid != localUser.uid && !userFollowing}
+        <button>Follow</button>
+      {:else if user.uid != localUser.uid && userFollowing}
+        <button>Unfollow</button>
+      {/if}
 
     </div>
   </div>
 </div>
 
 <style>
-  .popup_menu_panel {
+  .popup_menu_panel_small {
     position: absolute;
-    margin-top: 54px;
+    margin-top: 34px;
+    z-index: 2;
+  }
+
+  .popup_menu_panel_large {
+    position: absolute;
+    margin-top: 48px;
     z-index: 2;
   }
 
@@ -64,7 +76,7 @@
   .popup_menu_arrow {
     position: relative;
     top: -22px;
-    left: 14px;
+    
     z-index: 1;
     border: 1px solid rgb(242, 242, 242);
     box-shadow: rgba(0, 0, 0, 0.15) -1px -1px 1px -1px;
@@ -75,6 +87,14 @@
     display: block;
     content: "";
     pointer-events: none;
+  }
+
+  .popup_menu_arrow_position_small {
+    left: 4px;
+  }
+
+  .popup_menu_arrow_position_large {
+    left: 14px;
   }
 
   .popup_menu_item {

@@ -94,6 +94,7 @@ export type PostOverview = {
   tags: string[];
   commentCount: number;
   fileCount: number;
+  userFollowing?: boolean;
 };
 
 export type Post = {

@@ -15,6 +15,7 @@
 
   let dateString = "";
   let userPopupVisible = false;
+  let userPopupTimer;
 
   onMount(async function () {
     console.log(post.created);
@@ -24,7 +25,7 @@
 
   function showUserPopup() {
     console.log("Showing user popup...");
-    setTimeout(() => {
+    userPopupTimer = setTimeout(() => {
       userPopupVisible = true;
     }, 500);
     
@@ -33,15 +34,18 @@
   function hideUserPopup() {
     console.log("Hiding user popup...");
     userPopupVisible = false;
+    clearTimeout(userPopupTimer);
   }
 </script>
 
-<div class="container">
+<div class="container" on:mouseleave={hideUserPopup}>
   {#if post}
     <a href={"/posts/" + post.id}>
       <div class="frame">
         {#if userPopupVisible}
-          <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup} {localUser} user={post.author} />
+          <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup} 
+          {localUser} user={post.author} userFollowing={post.userFollowing}
+          size="small" />
         {/if}
         <div class="user">
           <div class="profile" on:mouseenter={showUserPopup}>
@@ -163,8 +167,6 @@
     /* margin-bottom: auto; */
   }
 
-  .content_right_image {
-  }
 
   .tags_box {
     /* margin-left: 23px; */

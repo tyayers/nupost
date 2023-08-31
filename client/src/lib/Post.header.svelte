@@ -51,10 +51,13 @@
     var copyText = document.getElementById("linkInput");
 
     // Select the text field
+    //@ts-ignore
     copyText.select();
+    //@ts-ignore
     copyText.setSelectionRange(0, 99999); // For mobile devices
 
     // Copy the text inside the text field
+    // @ts-ignore
     navigator.clipboard.writeText(copyText.value);
 
     return false;
@@ -68,11 +71,14 @@
 
   var userPopupTimer;
   function showUserPopup() {
-    console.log("Showing user popup...");
-    userPopupTimer = setTimeout(() => {
-      userPopupVisible = true;
-    }, 500);
-    
+    if (!userPopupVisible) {
+      console.log("Showing user popup...");
+      userPopupTimer = setTimeout(() => {
+        userPopupVisible = true;
+      }, 500);
+    }
+    else
+      console.log("Show called but already visible...");
   }
 
   function hideUserPopup() {
@@ -82,12 +88,14 @@
   }
 </script>
 
-<div class="container">
+<div class="container" on:mouseleave={hideUserPopup}>
   {#if post}
     <div class="frame">
       <div class="profile">
         {#if userPopupVisible}
-          <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup} localUser={localUser} user={post.header.author}  />
+          <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup}
+           localUser={localUser} user={post.header.author} 
+           size="large" userFollowing={post.header.userFollowing}/>
         {/if}
         <img
           alt="user profile"
@@ -109,7 +117,7 @@
         </div>
         <div class="byline_right">
           <a
-            href=""
+            href="/"
             title="Share on Twitter"
             on:click={shareOnTwitter}
             on:keypress={shareOnTwitter}
@@ -122,7 +130,7 @@
             >
           </a>
           <a
-            href=""
+            href="/"
             title="Share on Facebook"
             on:click={shareOnFacebook}
             on:keypress={shareOnFacebook}
@@ -136,7 +144,7 @@
           </a>
 
           <a
-            href=""
+            href="/"
             title="Share on LinkedIn"
             on:click={shareOnLinkedIn}
             on:keypress={shareOnLinkedIn}
@@ -150,7 +158,7 @@
           </a>
 
           <a
-            href=""
+            href="/"
             title="Copy a link"
             on:click={shareLink}
             on:keypress={shareLink}
@@ -278,9 +286,9 @@
     color: rgba(117, 117, 117, 1);
   }
 
-  .edit_button .text {
+  /* .edit_button .text {
     position: relative;
     font-size: 15px;
     top: -6px;
-  }
+  } */
 </style>
