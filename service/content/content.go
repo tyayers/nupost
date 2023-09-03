@@ -148,15 +148,24 @@ func SignIn(user data.User) {
 	go Finalize(data.PersistOnlyUsers)
 }
 
-func FollowUser(userId string, userToFollow string) {
+func FollowUser(userId string, userIdToFollow string) {
 	usersMutex.Lock()
-	index.IndexUsersFollowers[userToFollow][userId] = userId
-	index.IndexUsersFollowing[userId][userToFollow] = userToFollow
+	_, ok := index.IndexUsersFollowers[userIdToFollow]
+	if !ok {
+		index.IndexUsersFollowers[userIdToFollow] = map[string]string{}
+	}
+	_, ok = index.IndexUsersFollowing[userId]
+	if !ok {
+		index.IndexUsersFollowing[userId] = map[string]string{}
+	}
 
-	val, ok := index.IndexUsers[userToFollow]
+	index.IndexUsersFollowers[userIdToFollow][userId] = userId
+	index.IndexUsersFollowing[userId][userIdToFollow] = userIdToFollow
+
+	val, ok := index.IndexUsers[userIdToFollow]
 	if ok {
 		val.FollowersCount++
-		index.IndexUsers[userToFollow] = val
+		index.IndexUsers[userIdToFollow] = val
 	}
 
 	val, ok = index.IndexUsers[userId]
@@ -170,15 +179,15 @@ func FollowUser(userId string, userToFollow string) {
 	go Finalize(data.PersistOnlyUsers)
 }
 
-func UnFollowUser(userId string, userToUnFollow string) {
+func UnFollowUser(userId string, userIdToUnFollow string) {
 	usersMutex.Lock()
-	delete(index.IndexUsersFollowers[userToUnFollow], userId)
-	delete(index.IndexUsersFollowing[userId], userToUnFollow)
+	delete(index.IndexUsersFollowers[userIdToUnFollow], userId)
+	delete(index.IndexUsersFollowing[userId], userIdToUnFollow)
 
-	val, ok := index.IndexUsers[userToUnFollow]
+	val, ok := index.IndexUsers[userIdToUnFollow]
 	if ok {
 		val.FollowersCount--
-		index.IndexUsers[userToUnFollow] = val
+		index.IndexUsers[userIdToUnFollow] = val
 	}
 
 	val, ok = index.IndexUsers[userId]
@@ -287,12 +296,21 @@ func GetTaggedPosts(tagName string, start int, limit int) []data.PostHeader {
 	return taggedPosts
 }
 
-func GetPost(postId string, draft bool) *data.Post {
+func GetPost(postId string, draft bool, userId string) *data.Post {
 	var post = GetPostFromProvider(postId, draft)
 	post.Header = index.Index[postId]
 	post.Header.Upvotes = index.IndexCountLikes[postId]
 	post.Header.CommentCount = index.IndexCountComments[postId]
 	post.Header.Author = index.IndexUsers[post.Header.AuthorId]
+
+	// Test if user is following post author
+	_, ok := index.IndexUsersFollowers[post.Header.AuthorId][userId]
+	if ok {
+		post.Header.UserFollowing = true
+	} else {
+		post.Header.UserFollowing = false
+	}
+
 	return post
 }
 

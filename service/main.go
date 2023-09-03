@@ -35,16 +35,29 @@ func signIn(c *gin.Context) {
 }
 
 func followUser(c *gin.Context) {
+	userId := c.GetString("user_id")
 	var userFollowData data.UserFollow // Call BindJSON to deserialize
 
 	if err := c.BindJSON(&userFollowData); err != nil {
 		return
 	}
 
+	content.FollowUser(userId, userFollowData.UID)
+
+	c.Status(http.StatusOK)
 }
 
 func unFollowUser(c *gin.Context) {
+	userId := c.GetString("user_id")
+	var userFollowData data.UserFollow // Call BindJSON to deserialize
 
+	if err := c.BindJSON(&userFollowData); err != nil {
+		return
+	}
+
+	content.UnFollowUser(userId, userFollowData.UID)
+
+	c.Status(http.StatusOK)
 }
 
 func getData(c *gin.Context) {
@@ -119,10 +132,11 @@ func searchTags(c *gin.Context) {
 }
 
 func getPost(c *gin.Context) {
+	userId := c.GetString("user_id")
 	postId := c.Param("id")
 	draft, _ := strconv.ParseBool(c.Query("draft"))
 
-	post := content.GetPost(postId, draft)
+	post := content.GetPost(postId, draft, userId)
 	c.IndentedJSON(http.StatusOK, post)
 }
 
@@ -175,11 +189,12 @@ func createPost(c *gin.Context) {
 }
 
 func updatePost(c *gin.Context) {
+	userId := c.GetString("user_id")
 	postId := c.Param("id")
 	user_id := c.GetString("user_id")
 
 	// post := content.GetPostOverview(postId)
-	post := content.GetPost(postId, false)
+	post := content.GetPost(postId, false, userId)
 
 	if post.Header.AuthorId != user_id {
 		c.String(401, fmt.Sprintf("User not authorized to delete post."))
@@ -313,11 +328,11 @@ func upvoteComment(c *gin.Context) {
 }
 
 func attachFileToPost(c *gin.Context) {
-
+	userId := c.GetString("user_id")
 	postId := c.Param("id")
 	user_id := c.GetString("user_id")
 
-	post := content.GetPost(postId, false)
+	post := content.GetPost(postId, false, userId)
 
 	if post.Header.AuthorId != user_id {
 		c.String(401, fmt.Sprintf("User not authorized to update post."))
@@ -415,6 +430,34 @@ func jwtValidation() gin.HandlerFunc {
 	}
 }
 
+func jwtRead() gin.HandlerFunc {
+	client, err := app.Auth(context.Background())
+	if err != nil {
+		log.Fatalf("error getting Auth client: %v\n", err)
+	}
+
+	return func(c *gin.Context) {
+
+		var idToken = c.Request.Header["Authorization"]
+
+		if len(idToken) > 0 {
+			cleanedToken := strings.ReplaceAll(idToken[0], "Bearer ", "")
+			token, err := client.VerifyIDToken(context.Background(), cleanedToken)
+			if err != nil {
+				log.Printf("Error verifying ID token: %v \n", err)
+			} else {
+				//log.Printf("token claims %v", token)
+				c.Set("userEmail", token.Claims["email"])
+				c.Set("user_id", token.Claims["user_id"])
+			}
+		} else {
+			log.Printf("No id token found, rejecting.")
+		}
+
+		c.Next()
+	}
+}
+
 func main() {
 
 	content.Initialize(false)
@@ -447,10 +490,12 @@ func main() {
 	//router.Use(jwtValidation())
 
 	router.POST("/users/sign-in", jwtValidation(), signIn)
-	router.GET("/posts", getPosts)
-	router.GET("/posts/popular", getPopularPosts)
-	router.GET("/posts/search", searchPosts)
-	router.GET("/posts/:id", getPost)
+	router.POST("/users/follow", jwtValidation(), followUser)
+	router.POST("/users/unfollow", jwtValidation(), unFollowUser)
+	router.GET("/posts", jwtRead(), getPosts)
+	router.GET("/posts/popular", jwtRead(), getPopularPosts)
+	router.GET("/posts/search", jwtRead(), searchPosts)
+	router.GET("/posts/:id", jwtRead(), getPost)
 	router.POST("/posts", jwtValidation(), createPost)
 	router.PUT("/posts/:id", jwtValidation(), updatePost)
 	router.POST("/posts/:id/upvote", jwtValidation(), upvotePost)

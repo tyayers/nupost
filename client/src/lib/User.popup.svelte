@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { AppUser } from "./DataInterface";
+  import { appService } from "./DataService";
 
   export let onEnter: () => void;
   export let onLeave: () => void;
@@ -16,6 +17,16 @@
   function onMouseLeave() {
     if (onLeave) onLeave();
   }
+
+  function follow() {
+    appService.FollowUser(user.uid);
+    userFollowing = true;
+  }
+
+  function unFollow() {
+    appService.UnFollowUser(user.uid);
+    userFollowing = false;
+  }
 </script>
 
 <div class={"popup_menu_panel_" + size }
@@ -27,9 +38,9 @@
       {user.displayName}
 
       {#if user.uid != localUser.uid && !userFollowing}
-        <button>Follow</button>
+        <button on:click|stopPropagation={follow}>Follow</button>
       {:else if user.uid != localUser.uid && userFollowing}
-        <button>Unfollow</button>
+        <button on:click|stopPropagation={unFollow}>Unfollow</button>
       {/if}
 
     </div>

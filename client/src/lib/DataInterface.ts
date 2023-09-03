@@ -12,6 +12,8 @@ export interface DataService {
   GetIdToken(): Promise<string>;
   GetUserState(): UserState;
   Navigate(path: string): void;
+  FollowUser(userIdToFollow: string): void;
+  UnFollowUser(userIdToUnFollow: string): void;
 
   // Posts
   SearchPosts(input: string): Promise<SearchResult[]>;

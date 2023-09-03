@@ -1,4 +1,4 @@
-import { goto, invalidate } from "$app/navigation";
+import { goto, invalidateAll } from "$app/navigation";
 import { browser } from "$app/environment";
 
 import {
@@ -99,7 +99,8 @@ export class DataServiceGoogle implements DataService {
           if (window.location.pathname != "/") {
             // Invalidate all other paths to reload with user, let root forward to /home
             console.log(`invalidating path ${window.location.pathname}`);
-            invalidate(window.location.pathname);
+            //invalidate(window.location.pathname);
+            invalidateAll();
           }
         }
       });
@@ -168,6 +169,36 @@ export class DataServiceGoogle implements DataService {
         // An error happened.
         console.error(error);
       });
+  }
+
+  FollowUser(userIdToFollow: string): void {
+    this.GetIdToken().then((idToken) => {
+      fetch(this.defaultServer + `/users/follow`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + idToken,
+        },
+        body: JSON.stringify({
+          "uid": userIdToFollow
+        })
+      });
+    });
+  }
+
+  UnFollowUser(userIdToUnFollow: string): void {
+    this.GetIdToken().then((idToken) => {
+      fetch(this.defaultServer + `/users/unfollow`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + idToken,
+        },
+        body: JSON.stringify({
+          "uid": userIdToUnFollow
+        })
+      });
+    });
   }
 
   GetPosts(start: number, limit: number): Promise<PostOverview[]> {

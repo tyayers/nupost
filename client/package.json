@@ -13,14 +13,14 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-static": "^2.0.1",
 		"@sveltejs/kit": "^1.5.0",
-		"svelte": "^3.54.0",
-		"svelte-check": "^3.0.1",
+		"svelte": "^4.2.0",
+		"svelte-check": "^3.5.1",
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
 		"vite": "^4.0.0"
 	},
 	"type": "module",
 	"dependencies": {
-		"firebase": "^9.19.1"
+		"firebase": "^9.23.0"
 	}
 }

@@ -15,11 +15,21 @@ func InitializeProvider() data.PostIndex {
 
 	dataProvider.Initialize()
 
-	var index data.PostIndex = data.PostIndex{Index: map[string]data.PostHeader{}, IndexTime: []string{},
-		IndexDrafts: map[string]int{}, IndexDeleted: map[string]int{}, IndexPopularityLikes: map[int][]string{}, IndexPopularityViews: map[int][]string{},
-		IndexPopularityComments: map[int][]string{}, IndexTags: map[string]map[int]string{},
-		IndexCountLikes: map[string]int{}, IndexCountComments: map[string]int{},
-		IndexCountViews: map[string]int{}, IndexUsers: map[string]data.User{}}
+	var index data.PostIndex = data.PostIndex{
+		Index:                   map[string]data.PostHeader{},
+		IndexTime:               []string{},
+		IndexDrafts:             map[string]int{},
+		IndexDeleted:            map[string]int{},
+		IndexPopularityLikes:    map[int][]string{},
+		IndexPopularityViews:    map[int][]string{},
+		IndexPopularityComments: map[int][]string{},
+		IndexTags:               map[string]map[int]string{},
+		IndexCountLikes:         map[string]int{},
+		IndexCountComments:      map[string]int{},
+		IndexCountViews:         map[string]int{},
+		IndexUsers:              map[string]data.User{},
+		IndexUsersFollowers:     map[string]map[string]string{},
+		IndexUsersFollowing:     map[string]map[string]string{}}
 
 	postBytes, err := dataProvider.DownloadFile("index_headers.json")
 
