@@ -176,7 +176,7 @@ func FollowUser(userId string, userIdToFollow string) {
 
 	usersMutex.Unlock()
 
-	go Finalize(data.PersistOnlyUsers)
+	go Finalize(data.PersistOnlyUsersFollowers)
 }
 
 func UnFollowUser(userId string, userIdToUnFollow string) {
@@ -198,7 +198,7 @@ func UnFollowUser(userId string, userIdToUnFollow string) {
 
 	usersMutex.Unlock()
 
-	go Finalize(data.PersistOnlyUsers)
+	go Finalize(data.PersistOnlyUsersFollowers)
 }
 
 func GetData() data.Metadata {

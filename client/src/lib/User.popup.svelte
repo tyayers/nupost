@@ -4,6 +4,7 @@
 
   export let onEnter: () => void;
   export let onLeave: () => void;
+  export let followingChanged: (following: boolean) => void;
 
   export let user: AppUser
   export let localUser: AppUser
@@ -21,14 +22,17 @@
   function follow() {
     appService.FollowUser(user.uid);
     userFollowing = true;
+    followingChanged(userFollowing);
   }
 
   function unFollow() {
     appService.UnFollowUser(user.uid);
     userFollowing = false;
+    followingChanged(userFollowing);
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class={"popup_menu_panel_" + size }
     on:mouseenter={onMouseEnter}
     on:mouseleave={onMouseLeave}>
@@ -38,9 +42,9 @@
       {user.displayName}
 
       {#if user.uid != localUser.uid && !userFollowing}
-        <button on:click|stopPropagation={follow}>Follow</button>
+        <button on:click|preventDefault={follow}>Follow</button>
       {:else if user.uid != localUser.uid && userFollowing}
-        <button on:click|stopPropagation={unFollow}>Unfollow</button>
+        <button on:click|preventDefault={unFollow}>Unfollow</button>
       {/if}
 
     </div>

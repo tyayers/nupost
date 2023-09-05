@@ -36,8 +36,13 @@
     userPopupVisible = false;
     clearTimeout(userPopupTimer);
   }
+
+  function followingChanged(following: boolean) {
+    post.userFollowing = following;
+  }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="container" on:mouseleave={hideUserPopup}>
   {#if post}
     <a href={"/posts/" + post.id}>
@@ -45,9 +50,10 @@
         {#if userPopupVisible}
           <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup} 
           {localUser} user={post.author} userFollowing={post.userFollowing}
-          size="small" />
+          size="small" {followingChanged} />
         {/if}
         <div class="user">
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div class="profile" on:mouseenter={showUserPopup}>
             <img
               class="profile"

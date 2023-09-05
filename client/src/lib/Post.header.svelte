@@ -86,8 +86,13 @@
     clearTimeout(userPopupTimer);
     userPopupVisible = false;
   }
+
+  function followingChanged(following: boolean) {
+    post.header.userFollowing = following;
+  }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="container" on:mouseleave={hideUserPopup}>
   {#if post}
     <div class="frame">
@@ -95,7 +100,8 @@
         {#if userPopupVisible}
           <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup}
            localUser={localUser} user={post.header.author} 
-           size="large" userFollowing={post.header.userFollowing}/>
+           size="large" userFollowing={post.header.userFollowing}
+           {followingChanged}/>
         {/if}
         <img
           alt="user profile"
@@ -200,6 +206,7 @@
                 /></svg
               >
             </a>
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
             <span
               class="delete_button"
               title="Delete post"
