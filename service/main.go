@@ -119,6 +119,22 @@ func getTaggedPosts(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, content.GetTaggedPosts(tagName, start, limit))
 }
 
+func getUserPosts(c *gin.Context) {
+	userId := c.Param("user")
+
+	start, err := strconv.Atoi(c.Query("start"))
+	if err != nil {
+		start = 0
+	}
+
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		limit = 10
+	}
+
+	c.IndentedJSON(http.StatusOK, content.GetUserPosts(userId, start, limit))
+}
+
 func searchTags(c *gin.Context) {
 	text := c.Query("q")
 
@@ -492,6 +508,7 @@ func main() {
 	router.POST("/users/sign-in", jwtValidation(), signIn)
 	router.POST("/users/follow", jwtValidation(), followUser)
 	router.POST("/users/unfollow", jwtValidation(), unFollowUser)
+	router.GET("/users/posts", jwtValidation(), getUserPosts)
 	router.GET("/posts", jwtRead(), getPosts)
 	router.GET("/posts/popular", jwtRead(), getPopularPosts)
 	router.GET("/posts/search", jwtRead(), searchPosts)

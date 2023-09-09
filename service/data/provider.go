@@ -15,6 +15,7 @@ type PostIndex struct {
 	IndexUsers              map[string]User
 	IndexUsersFollowers     map[string]map[string]string
 	IndexUsersFollowing     map[string]map[string]string
+	IndexUsersPosts         map[string][]int
 }
 
 type PostHeader struct {

@@ -38,16 +38,44 @@
     on:mouseleave={onMouseLeave}>
   <div class={"popup_menu_arrow " + "popup_menu_arrow_position_" + size} />
   <div class="popup_menu">
-    <div class="popup_menu_inner">
-      {user.displayName}
+    {#if user}
+      <div class="popup_menu_inner">
 
-      {#if user.uid != localUser.uid && !userFollowing}
-        <button on:click|preventDefault={follow}>Follow</button>
-      {:else if user.uid != localUser.uid && userFollowing}
-        <button on:click|preventDefault={unFollow}>Unfollow</button>
-      {/if}
+        <img
+        alt="user profile"
+        class="popup_user_image"
+        width="24"
+        src={user.photoURL}
+        referrerpolicy="no-referrer"
+        />
 
-    </div>
+        <span class="popup_user_name">
+          {user.displayName}
+        </span>
+
+        <div class="user_stats_box">
+          {#if user.postCount == 1}
+            <span class="posts_count_box">{user.postCount} Post</span>
+          {:else}
+            <span class="posts_count_box"><b>{user.postCount}</b> Posts</span>
+          {/if}
+
+          {#if user.followers == 1}
+            <span class="followers_count_box">{user.followers} Follower</span>
+          {:else}
+            <span class="followers_count_box"><b>{user.followers}</b> Followers</span>
+          {/if}
+        </div>
+
+        {#if user.uid != localUser.uid && !userFollowing}
+          <button class="positive_button" on:click|preventDefault={follow}>Follow</button>
+        {:else if user.uid != localUser.uid && userFollowing}
+          <button class="negative_button" on:click|preventDefault={unFollow}>Unfollow</button>
+        {/if}
+
+
+      </div>
+    {/if}
   </div>
 </div>
 
@@ -68,14 +96,16 @@
     position: relative;
     left: -14px;
     top: -10px;
-    height: 200px;
+    height: 140px;
     width: 260px;
-    overflow-y: auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
     border-radius: 3px;
     background: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px 0px;
     border: 1px solid rgb(242, 242, 242);
     border-radius: 4px;
+    color: black;
   }
 
   .popup_menu_inner {
@@ -83,8 +113,7 @@
     background: rgb(255, 255, 255);
     width: 100%;
     z-index: 2;
-    padding-top: 20px;
-    /* padding-bottom: 20px; */
+    padding: 14px;
     font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
@@ -112,12 +141,63 @@
     left: 14px;
   }
 
-  .popup_menu_item {
-    padding-top: 5px;
-    padding-bottom: 16px;
-    padding-left: 10px;
-    /* border-bottom: 1px dashed rgb(242, 242, 242); */
+  .popup_user_image {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+  }
+
+  .popup_user_name {
+    position: relative;
+    top: -6px;
+    left: 4px;
+  }
+
+  .positive_button {
+    position: absolute;
+    right: 18px;
+    top: 104px;
     cursor: pointer;
-    font-size: 16px;
+    user-select: none;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    margin-right: 20px;
+    height: 25px;
+    width: 65px;
+    /* margin-top: 7px; */
+    background: #1a8917;
+    border-color: #1a8917;
+    color: white;
+  }
+
+  .negative_button {
+    position: absolute;
+    right: 18px;
+    top: 104px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    margin-right: 20px;
+    height: 25px;
+    width: 65px;
+    /* margin-top: 7px; */
+    background: #ffffff;
+    border-color: #d0d0d0;
+    color: #5a5a5a;
+  }  
+
+  .user_stats_box {
+    margin-top: 14px;
+  }
+
+  .posts_count_box {
+    margin-left: 2px;
+  }
+
+  .followers_count_box {
+    margin-left: 34px;
   }
 </style>

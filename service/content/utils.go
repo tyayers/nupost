@@ -29,7 +29,9 @@ func InitializeProvider() data.PostIndex {
 		IndexCountViews:         map[string]int{},
 		IndexUsers:              map[string]data.User{},
 		IndexUsersFollowers:     map[string]map[string]string{},
-		IndexUsersFollowing:     map[string]map[string]string{}}
+		IndexUsersFollowing:     map[string]map[string]string{},
+		IndexUsersPosts:         map[string][]int{},
+	}
 
 	postBytes, err := dataProvider.DownloadFile("index_headers.json")
 

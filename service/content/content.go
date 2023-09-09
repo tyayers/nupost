@@ -296,6 +296,26 @@ func GetTaggedPosts(tagName string, start int, limit int) []data.PostHeader {
 	return taggedPosts
 }
 
+func GetUserPosts(userId string, start int, limit int) []data.PostHeader {
+	userPosts := []data.PostHeader{}
+
+	posts, ok := index.IndexUsersPosts[userId]
+
+	if ok {
+		postIndex := start
+		for postIndex < len(posts) && len(userPosts) < limit {
+			post, ok := index.Index[index.IndexTime[posts[postIndex]]]
+			if ok {
+				userPosts = append(userPosts, post)
+			}
+
+			postIndex++
+		}
+	}
+
+	return userPosts
+}
+
 func GetPost(postId string, draft bool, userId string) *data.Post {
 	var post = GetPostFromProvider(postId, draft)
 	post.Header = index.Index[postId]
@@ -373,6 +393,9 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 			}
 		}
 	}
+
+	// Add to user index
+	index.IndexUsersPosts[newPost.Header.AuthorId] = append(index.IndexUsersPosts[newPost.Header.AuthorId], newPost.Header.Index)
 
 	// Add to id index
 	index.Index[newPost.Header.Id] = newPost.Header

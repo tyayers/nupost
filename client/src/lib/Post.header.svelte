@@ -97,7 +97,7 @@
   {#if post}
     <div class="frame">
       <div class="profile">
-        {#if userPopupVisible}
+        {#if userPopupVisible && localUser}
           <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup}
            localUser={localUser} user={post.header.author} 
            size="large" userFollowing={post.header.userFollowing}
