@@ -50,7 +50,7 @@
         />
 
         <span class="popup_user_name">
-          {user.displayName}
+          <a href={"/users/" + user.uid}>{user.displayName}</a>
         </span>
 
         <div class="user_stats_box">

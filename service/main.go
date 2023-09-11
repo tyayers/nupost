@@ -120,7 +120,7 @@ func getTaggedPosts(c *gin.Context) {
 }
 
 func getUserPosts(c *gin.Context) {
-	userId := c.Param("user")
+	userId := c.Param("id")
 
 	start, err := strconv.Atoi(c.Query("start"))
 	if err != nil {
@@ -346,11 +346,10 @@ func upvoteComment(c *gin.Context) {
 func attachFileToPost(c *gin.Context) {
 	userId := c.GetString("user_id")
 	postId := c.Param("id")
-	user_id := c.GetString("user_id")
 
 	post := content.GetPost(postId, false, userId)
 
-	if post.Header.AuthorId != user_id {
+	if post.Header.AuthorId != userId {
 		c.String(401, fmt.Sprintf("User not authorized to update post."))
 	} else {
 		file, err := c.FormFile("upload")
@@ -508,7 +507,7 @@ func main() {
 	router.POST("/users/sign-in", jwtValidation(), signIn)
 	router.POST("/users/follow", jwtValidation(), followUser)
 	router.POST("/users/unfollow", jwtValidation(), unFollowUser)
-	router.GET("/users/posts", jwtValidation(), getUserPosts)
+	router.GET("/users/:id/posts", jwtRead(), getUserPosts)
 	router.GET("/posts", jwtRead(), getPosts)
 	router.GET("/posts/popular", jwtRead(), getPopularPosts)
 	router.GET("/posts/search", jwtRead(), searchPosts)
