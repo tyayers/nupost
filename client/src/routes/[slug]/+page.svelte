@@ -1,13 +1,16 @@
 <script lang="ts">
-  import Header from "../../../lib/Header.svelte";
-  import PostCard from "../../../lib/Post.card.svelte";
-  import PostPopularWidget from "../../../lib/Post.popular.svelte";
+  import Header from "../../lib/Header.svelte";
+  import PostCard from "../../lib/Post.card.svelte";
+  import PostPopularWidget from "../../lib/Post.popular.svelte";
 
   import { appService } from "$lib/DataService";
-  import type { PostOverview, PostOverviewCollection } from "$lib/DataInterface";
+  import type {
+    PostOverview,
+    PostOverviewCollection,
+  } from "$lib/DataInterface";
   import { ToTitleCase } from "$lib/DataInterface";
 
-  export let data: {userId: string, posts: PostOverview[]};
+  export let data: { userId: string; posts: PostOverview[] };
 
   let start: number = 0;
   let limit: number = 5;

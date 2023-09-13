@@ -28,6 +28,7 @@ func InitializeProvider() data.PostIndex {
 		IndexCountComments:      map[string]int{},
 		IndexCountViews:         map[string]int{},
 		IndexUsers:              map[string]data.User{},
+		IndexUsersHandles:       map[string]string{},
 		IndexUsersFollowers:     map[string]map[string]string{},
 		IndexUsersFollowing:     map[string]map[string]string{},
 		IndexUsersPosts:         map[string][]int{},

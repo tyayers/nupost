@@ -6,10 +6,10 @@
   export let onLeave: () => void;
   export let followingChanged: (following: boolean) => void;
 
-  export let user: AppUser
-  export let localUser: AppUser
-  export let userFollowing: boolean
-  export let size: string
+  export let user: AppUser;
+  export let localUser: AppUser;
+  export let userFollowing: boolean;
+  export let size: string;
 
   function onMouseEnter() {
     if (onEnter) onEnter();
@@ -33,24 +33,25 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class={"popup_menu_panel_" + size }
-    on:mouseenter={onMouseEnter}
-    on:mouseleave={onMouseLeave}>
+<div
+  class={"popup_menu_panel_" + size}
+  on:mouseenter={onMouseEnter}
+  on:mouseleave={onMouseLeave}
+>
   <div class={"popup_menu_arrow " + "popup_menu_arrow_position_" + size} />
   <div class="popup_menu">
     {#if user}
       <div class="popup_menu_inner">
-
         <img
-        alt="user profile"
-        class="popup_user_image"
-        width="24"
-        src={user.photoURL}
-        referrerpolicy="no-referrer"
+          alt="user profile"
+          class="popup_user_image"
+          width="24"
+          src={user.photoURL}
+          referrerpolicy="no-referrer"
         />
 
         <span class="popup_user_name">
-          <a href={"/users/" + user.handle}>{user.displayName}</a>
+          <a href={"/" + user.handle}>{user.displayName}</a>
         </span>
 
         <div class="user_stats_box">
@@ -63,17 +64,21 @@
           {#if user.followers == 1}
             <span class="followers_count_box">{user.followers} Follower</span>
           {:else}
-            <span class="followers_count_box"><b>{user.followers}</b> Followers</span>
+            <span class="followers_count_box"
+              ><b>{user.followers}</b> Followers</span
+            >
           {/if}
         </div>
 
         {#if user.uid != localUser.uid && !userFollowing}
-          <button class="positive_button" on:click|preventDefault={follow}>Follow</button>
+          <button class="positive_button" on:click|preventDefault={follow}
+            >Follow</button
+          >
         {:else if user.uid != localUser.uid && userFollowing}
-          <button class="negative_button" on:click|preventDefault={unFollow}>Unfollow</button>
+          <button class="negative_button" on:click|preventDefault={unFollow}
+            >Unfollow</button
+          >
         {/if}
-
-
       </div>
     {/if}
   </div>
@@ -120,7 +125,7 @@
   .popup_menu_arrow {
     position: relative;
     top: -22px;
-    
+
     z-index: 1;
     border: 1px solid rgb(242, 242, 242);
     box-shadow: rgba(0, 0, 0, 0.15) -1px -1px 1px -1px;
@@ -187,7 +192,7 @@
     background: #ffffff;
     border-color: #d0d0d0;
     color: #5a5a5a;
-  }  
+  }
 
   .user_stats_box {
     margin-top: 14px;

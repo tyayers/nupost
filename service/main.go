@@ -140,7 +140,11 @@ func getTaggedPosts(c *gin.Context) {
 }
 
 func getUserPosts(c *gin.Context) {
-	userId := c.Param("id")
+	handle := c.Param("handle")
+	if handle == "" {
+		c.Status(http.StatusBadRequest)
+		return
+	}
 
 	start, err := strconv.Atoi(c.Query("start"))
 	if err != nil {
@@ -152,7 +156,7 @@ func getUserPosts(c *gin.Context) {
 		limit = 10
 	}
 
-	c.IndentedJSON(http.StatusOK, content.GetUserPosts(userId, start, limit))
+	c.IndentedJSON(http.StatusOK, content.GetUserPosts(handle, start, limit))
 }
 
 func searchTags(c *gin.Context) {
@@ -479,7 +483,7 @@ func jwtRead() gin.HandlerFunc {
 			cleanedToken := strings.ReplaceAll(idToken[0], "Bearer ", "")
 			token, err := client.VerifyIDToken(context.Background(), cleanedToken)
 			if err != nil {
-				log.Printf("Error verifying ID token: %v \n", err)
+				//log.Printf("Error verifying ID token: %v \n", err)
 			} else {
 				//log.Printf("token claims %v", token)
 				c.Set("userEmail", token.Claims["email"])
@@ -527,7 +531,7 @@ func main() {
 	router.POST("/users/sign-in", jwtValidation(), signIn)
 	router.POST("/users/follow", jwtValidation(), followUser)
 	router.POST("/users/unfollow", jwtValidation(), unFollowUser)
-	router.GET("/users/:id/posts", jwtRead(), getUserPosts)
+	router.GET("/users/:handle/posts", jwtRead(), getUserPosts)
 	router.GET("/posts", jwtRead(), getPosts)
 	router.GET("/posts/popular", jwtRead(), getPopularPosts)
 	router.GET("/posts/search", jwtRead(), searchPosts)

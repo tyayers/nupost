@@ -326,8 +326,13 @@ func GetTaggedPosts(tagName string, start int, limit int) []data.PostHeader {
 	return taggedPosts
 }
 
-func GetUserPosts(userId string, start int, limit int) []data.PostHeader {
+func GetUserPosts(userHandle string, start int, limit int) []data.PostHeader {
 	userPosts := []data.PostHeader{}
+
+	userId, ok := index.IndexUsersHandles[userHandle]
+	if !ok {
+		return userPosts
+	}
 
 	posts, ok := index.IndexUsersPosts[userId]
 
