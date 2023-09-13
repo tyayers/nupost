@@ -117,6 +117,12 @@ func InitializeProvider() data.PostIndex {
 		json.Unmarshal(postBytes, &index.IndexUsers)
 	}
 
+	postBytes, err = dataProvider.DownloadFile("index_users_handles.json")
+
+	if err == nil {
+		json.Unmarshal(postBytes, &index.IndexUsersHandles)
+	}
+
 	postBytes, err = dataProvider.DownloadFile("index_users_followers.json")
 
 	if err == nil {
@@ -273,6 +279,15 @@ func FinalizeProvider(persistMode data.PersistMode, index data.PostIndex) {
 		}
 
 		dataProvider.UploadFile("index_users.json", jsonData)
+
+		// Persist user handles
+		jsonData, err = json.Marshal(index.IndexUsersHandles)
+		if err != nil {
+			fmt.Printf("could not marshal json: %s\n", err)
+			return
+		}
+
+		dataProvider.UploadFile("index_users_handles.json", jsonData)
 	}
 
 	// Persist users followers

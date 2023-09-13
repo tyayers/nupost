@@ -16,7 +16,9 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="sc" on:keydown={() => {}} on:click={cancel}>
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="sp" on:keydown={() => {}} on:click|stopPropagation={() => {}}>
     <h2>Welcome back.</h2>
     <div class="so">

@@ -128,24 +128,54 @@ func Finalize(persistMode data.PersistMode) {
 	fmt.Printf("Finished finalizing indexes with persist mode %d in {%s}\n", persistMode, elapsed)
 }
 
-func SignIn(user data.User) {
+func SignIn(user data.User) data.User {
 	oldUser, ok := index.IndexUsers[user.UID]
 
 	if !ok {
 		usersMutex.Lock()
+		user.Handle = strings.ToLower(strings.Replace(user.DisplayName, " ", "_", -1)) + RandomString(3)
+		index.IndexUsersHandles[user.Handle] = user.UID
 		index.IndexUsers[user.UID] = user
 		usersMutex.Unlock()
+		oldUser = user
 	} else {
-		usersMutex.Lock()
 		oldUser.DisplayName = user.DisplayName
 		oldUser.PhotoURL = user.PhotoURL
 		oldUser.Email = user.Email
 		oldUser.EmailVerified = user.EmailVerified
+
+		usersMutex.Lock()
+		if oldUser.Handle == "" {
+			user.Handle = strings.ToLower(strings.Replace(user.DisplayName, " ", "_", -1)) + RandomString(3)
+			index.IndexUsersHandles[user.Handle] = user.UID
+		}
 		index.IndexUsers[user.UID] = oldUser
 		usersMutex.Unlock()
 	}
 
 	go Finalize(data.PersistOnlyUsers)
+
+	return oldUser
+}
+
+func SetHandle(userId string, handle string) {
+	oldUser, ok := index.IndexUsers[userId]
+
+	if ok {
+		usersMutex.Lock()
+
+		if oldUser.Handle != "" {
+			delete(index.IndexUsersHandles, oldUser.Handle)
+		}
+
+		oldUser.Handle = handle
+		oldUser.HandleSetByUser = true
+		index.IndexUsersHandles[handle] = userId
+		index.IndexUsers[userId] = oldUser
+		usersMutex.Unlock()
+
+		go Finalize(data.PersistOnlyUsers)
+	}
 }
 
 func FollowUser(userId string, userIdToFollow string) {

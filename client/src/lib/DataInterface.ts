@@ -63,6 +63,7 @@ export type AppUser = {
   email: string;
   uid?: string;
   displayName?: string;
+  handle?: string;
   phoneNumber?: string;
   photoURL?: string;
   providerId?: string;

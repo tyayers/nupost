@@ -29,7 +29,27 @@ func signIn(c *gin.Context) {
 		return
 	}
 
-	content.SignIn(userData)
+	userData = content.SignIn(userData)
+
+	c.IndentedJSON(http.StatusOK, userData)
+}
+
+func setHandle(c *gin.Context) {
+	userId := c.GetString("user_id")
+
+	var userHandleData data.UserHandle // Call BindJSON to deserialize
+
+	if err := c.BindJSON(&userHandleData); err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	if userId != userHandleData.UID {
+		c.Status(http.StatusForbidden)
+		return
+	}
+
+	content.SetHandle(userId, userHandleData.Handle)
 
 	c.Status(http.StatusOK)
 }

@@ -94,14 +94,17 @@ export class DataServiceGoogle implements DataService {
           if (browser) localStorage.setItem("UserSignedIn", "true");
 
           // Send server user info
-          this.SignInToService(this.localUser);
+          this.SignInToService(this.localUser).then((newUser: AppUser) => {
+            this.localUser = newUser;
+            this.user.update((n) => this.localUser);
 
-          if (window.location.pathname != "/") {
-            // Invalidate all other paths to reload with user, let root forward to /home
-            console.log(`invalidating path ${window.location.pathname}`);
-            //invalidate(window.location.pathname);
-            invalidateAll();
-          }
+            if (window.location.pathname != "/") {
+              // Invalidate all other paths to reload with user, let root forward to /home
+              console.log(`invalidating path ${window.location.pathname}`);
+              //invalidate(window.location.pathname);
+              invalidateAll();
+            }            
+          });
         }
       });
     }
@@ -134,15 +137,23 @@ export class DataServiceGoogle implements DataService {
     });
   }
 
-  SignInToService(user: AppUser): void {
-    this.GetIdToken().then((idToken) => {
-      fetch(this.defaultServer + `/users/sign-in`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + idToken,
-        },
-        body: JSON.stringify(user)
+  SignInToService(user: AppUser): Promise<AppUser> {
+    return new Promise<AppUser>((resolve, reject) => {
+      this.GetIdToken().then((idToken) => {
+        fetch(this.defaultServer + `/users/sign-in`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + idToken,
+          },
+          body: JSON.stringify(user)
+        })          
+        .then((response) => {
+          return response.json();
+        })
+        .then((data: AppUser) => {
+          resolve(data);
+        });
       });
     });
   }

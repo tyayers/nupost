@@ -13,6 +13,7 @@ type PostIndex struct {
 	IndexCountComments      map[string]int
 	IndexCountViews         map[string]int
 	IndexUsers              map[string]User
+	IndexUsersHandles       map[string]string
 	IndexUsersFollowers     map[string]map[string]string
 	IndexUsersFollowing     map[string]map[string]string
 	IndexUsersPosts         map[string][]int
@@ -58,22 +59,29 @@ type Post struct {
 }
 
 type User struct {
-	UID            string `json:"uid"`
-	DisplayName    string `json:"displayName"`
-	Email          string `json:"-"`
-	ProfileText    string `json:"profileText"`
-	PhotoURL       string `json:"photoURL"`
-	ProviderId     string `json:"-"`
-	EmailVerified  bool   `json:"-"`
-	IsAnonymous    bool   `json:"-"`
-	Registered     string `json:"registered"`
-	FollowersCount int    `json:"followers"`
-	FollowingCount int    `json:"following"`
-	PostsCount     int    `json:"postCount"`
+	UID             string `json:"uid"`
+	Handle          string `json:"handle"`
+	HandleSetByUser bool   `json:"handleSetByUser"`
+	DisplayName     string `json:"displayName"`
+	Email           string `json:"-"`
+	ProfileText     string `json:"profileText"`
+	PhotoURL        string `json:"photoURL"`
+	ProviderId      string `json:"-"`
+	EmailVerified   bool   `json:"-"`
+	IsAnonymous     bool   `json:"-"`
+	Registered      string `json:"registered"`
+	FollowersCount  int    `json:"followers"`
+	FollowingCount  int    `json:"following"`
+	PostsCount      int    `json:"postCount"`
 }
 
 type UserFollow struct {
 	UID string `json:"uid"`
+}
+
+type UserHandle struct {
+	UID    string `json:"uid"`
+	Handle string `json:"handle"`
 }
 
 type SearchResult struct {
