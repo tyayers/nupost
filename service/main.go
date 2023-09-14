@@ -38,20 +38,34 @@ func setHandle(c *gin.Context) {
 	userId := c.GetString("user_id")
 
 	var userHandleData data.UserHandle // Call BindJSON to deserialize
-
 	if err := c.BindJSON(&userHandleData); err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	if userId != userHandleData.UID {
-		c.Status(http.StatusForbidden)
+	result := content.SetHandle(userId, userHandleData.OldHandle, userHandleData.NewHandle)
+
+	if result {
+		c.Status(http.StatusNoContent)
+	} else {
+		c.Status(http.StatusConflict)
+	}
+}
+
+func getIfHandleExists(c *gin.Context) {
+	handle := c.Param("handle")
+	if handle == "" {
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	content.SetHandle(userId, userHandleData.Handle)
+	exists := content.TestHandle(handle)
 
-	c.Status(http.StatusOK)
+	if exists {
+		c.Status(http.StatusFound)
+	} else {
+		c.Status(http.StatusNotFound)
+	}
 }
 
 func followUser(c *gin.Context) {
@@ -532,6 +546,8 @@ func main() {
 	router.POST("/users/follow", jwtValidation(), followUser)
 	router.POST("/users/unfollow", jwtValidation(), unFollowUser)
 	router.GET("/users/:handle/posts", jwtRead(), getUserPosts)
+	router.GET("/users/:handle/exists", jwtRead(), getIfHandleExists)
+	router.POST("/users/:handle/sethandle", jwtValidation(), setHandle)
 	router.GET("/posts", jwtRead(), getPosts)
 	router.GET("/posts/popular", jwtRead(), getPopularPosts)
 	router.GET("/posts/search", jwtRead(), searchPosts)

@@ -80,8 +80,8 @@ type UserFollow struct {
 }
 
 type UserHandle struct {
-	UID    string `json:"uid"`
-	Handle string `json:"handle"`
+	OldHandle string `json:"oldHandle"`
+	NewHandle string `json:"newHandle"`
 }
 
 type SearchResult struct {

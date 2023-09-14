@@ -98,7 +98,10 @@ export class DataServiceGoogle implements DataService {
             this.localUser = newUser;
             this.user.update((n) => this.localUser);
 
-            if (window.location.pathname != "/") {
+            if (!this.localUser.handleSetByUser) {
+              this.Navigate("/handle");
+            }
+            else if (window.location.pathname != "/") {
               // Invalidate all other paths to reload with user, let root forward to /home
               console.log(`invalidating path ${window.location.pathname}`);
               //invalidate(window.location.pathname);
@@ -180,6 +183,52 @@ export class DataServiceGoogle implements DataService {
         // An error happened.
         console.error(error);
       });
+  }
+
+  GetIfHandleExists(handle: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.GetIdToken().then((idToken) => {
+        fetch(this.defaultServer + `/users/` + handle + `/exists`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + idToken,
+          }
+        }).then((response) => {  
+          if (response.status == 302)
+            resolve(true);
+          else
+            resolve(false);
+        });
+      });
+    });
+  }
+
+  SetHandle(newHandle: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.GetIdToken().then((idToken) => {
+        fetch(this.defaultServer + `/users/` + this.localUser.handle + `/sethandle`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + idToken,
+          },
+          body: JSON.stringify({
+            "oldHandle": this.localUser.handle,
+            "newHandle": newHandle
+          })
+        }).then((response) => {  
+          if (response.status == 204) {
+            this.localUser.handle = newHandle;
+            this.localUser.handleSetByUser = true;
+            resolve(true);
+          }
+          else {
+            resolve(false);
+          }
+        });
+      });
+    });
   }
 
   FollowUser(userIdToFollow: string): void {

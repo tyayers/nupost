@@ -109,7 +109,6 @@ func InitializeBleveTags() {
 	start := time.Now()
 	count := 0
 	for k := range index.IndexTags {
-		//fmt.Printf("Indexing tag key[%s] and index [%d]\n", k, count)
 		tagIndex.Index(k, k)
 		count++
 	}
@@ -158,24 +157,40 @@ func SignIn(user data.User) data.User {
 	return oldUser
 }
 
-func SetHandle(userId string, handle string) {
-	oldUser, ok := index.IndexUsers[userId]
+func TestHandle(testHandle string) bool {
+	_, ok := index.IndexUsersHandles[testHandle]
+	return ok
+}
 
-	if ok {
-		usersMutex.Lock()
+func SetHandle(userId string, oldHandle string, newHandle string) bool {
+	result := false
 
-		if oldUser.Handle != "" {
-			delete(index.IndexUsersHandles, oldUser.Handle)
+	_, ok := index.IndexUsers[userId]
+	handleUserId, h_ok := index.IndexUsersHandles[oldHandle]
+
+	if ok && h_ok {
+		handleUser, hu_ok := index.IndexUsers[handleUserId]
+
+		if hu_ok && userId == handleUser.UID {
+			usersMutex.Lock()
+
+			if handleUser.Handle != "" {
+				delete(index.IndexUsersHandles, handleUser.Handle)
+			}
+
+			handleUser.Handle = newHandle
+			handleUser.HandleSetByUser = true
+			index.IndexUsersHandles[newHandle] = userId
+			index.IndexUsers[userId] = handleUser
+			usersMutex.Unlock()
+
+			go Finalize(data.PersistOnlyUsers)
+
+			result = true
 		}
-
-		oldUser.Handle = handle
-		oldUser.HandleSetByUser = true
-		index.IndexUsersHandles[handle] = userId
-		index.IndexUsers[userId] = oldUser
-		usersMutex.Unlock()
-
-		go Finalize(data.PersistOnlyUsers)
 	}
+
+	return result
 }
 
 func FollowUser(userId string, userIdToFollow string) {

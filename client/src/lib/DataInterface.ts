@@ -14,6 +14,8 @@ export interface DataService {
   Navigate(path: string): void;
   FollowUser(userIdToFollow: string): void;
   UnFollowUser(userIdToUnFollow: string): void;
+  GetIfHandleExists(handle: string): Promise<boolean>;
+  SetHandle(newHandle: string): Promise<boolean>;
 
   // Posts
   SearchPosts(input: string): Promise<SearchResult[]>;
@@ -64,6 +66,7 @@ export type AppUser = {
   uid?: string;
   displayName?: string;
   handle?: string;
+  handleSetByUser?: boolean;
   phoneNumber?: string;
   photoURL?: string;
   providerId?: string;
