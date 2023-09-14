@@ -107,6 +107,7 @@
         {#if tag}
           <span class="tag">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
             <span
               class="delete_tag_button"
               on:click|stopPropagation={() => removeTag(tag)}>x</span
@@ -118,9 +119,11 @@
   </div>
   {#if displayAddFrame}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="add_box" on:click|stopPropagation={observeClicks}>
       <div class="search_box">
         <div class="input_box">
+          <!-- svelte-ignore a11y-autofocus -->
           <input
             class="input"
             bind:value={searchInput}
@@ -135,8 +138,10 @@
           <div class="arrow" />
           <div class="results_list">
             <div class="results_inner_list">
+              <!-- svelte-ignore a11y-no-static-element-interactions -->
               {#each results as res, i}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <div
                   class="result"
                   on:click={() => {
