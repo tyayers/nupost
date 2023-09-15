@@ -31,25 +31,29 @@
     <Header />
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="popup_dialog" on:click={() => { history.back(); }}>
+    <div class="popup_dialog" on:click={() => { appService.Navigate("/home") }}>
       <div class="popup_dialog_content" on:click|stopPropagation={() => {}}>
           <h1>Welcome {localUser.handle}!</h1>
           <br/>
           <div>
-            Your handle was automatically generated, you can change it easily here by finding a new handle.
+            Your handle was automatically generated, you can set a new, free handle here.
             <br /><br />
-            <input placeholder="User handle"
-            bind:value={handleInput}
-            on:keyup|stopPropagation={testIfHandleExists}
+            <input placeholder="New user handle" autofocus class:handleExists
+              bind:value={handleInput}
+              on:keyup|stopPropagation={testIfHandleExists}
             />
             <br />
             {#if handleInput && handleExists}
-              Handle already taken!
+              <div class="handle_tip_negative">
+                Handle already taken!
+              </div>
             {:else if handleInput}
-              Handle available!
+              <div class="handle_tip_positive">
+                Handle available!
+              </div>            
             {/if}
             <br />
-            <button on:click={submitHandle}>Submit</button>
+            <button class="submit_button" on:click={submitHandle}>Submit</button>
           </div>
       </div>
     </div>
@@ -73,19 +77,46 @@
         position: absolute;
         /* top: 40px;
         bottom: 40px; */
+        height: 204px;
         width: 90%;
-        max-width: 704px;
+        max-width: 464px;
         background: white;
         margin: auto;
         border: 1px #eee solid;
         border-radius: 24px;
         font-size: 14px;
         padding: 28px;
+        padding-top: 12px;
+        padding-right: 54px;
         overflow-y: auto;
     }
 
     .popup_dialog_content h1 {
-        font-size: 24px;
+      font-size: 24px;
+    }
+
+    .handleExists {
+      border-color: rgb(201, 74, 74);
+    }
+
+    .handle_tip_positive {
+      margin-top: 4px;
+      margin-left: 2px;
+      color: rgb(26, 137, 23);
+      font-size: 12px;
+    }
+
+    .handle_tip_negative {
+      margin-top: 4px;
+      margin-left: 2px;
+      color: rgb(201, 74, 74);
+      font-size: 12px;
+    }
+
+    .submit_button {
+      right: 44px;
+      position: absolute;
+      bottom: 20px;
     }
 
   </style>
