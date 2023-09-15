@@ -39,9 +39,28 @@
     {#if data && data.posts}
       <div class="container">
         <div class="panel_left">
-          <div class="pannel_left_inner">
-            <div class="tag_title">{ToTitleCase(data.userId)}</div>
+          <div class="panel_left_inner">
+            <div class="tag_title">@{data.userId}</div>
+            <div class="user_header">
+              <table class="styled_table">
+                <tbody>
+                  <tr>
+                    <td>Joined</td>
+                    <td style="text-align: right;">Aug 23rd, 2023</td>
+                  </tr>
+                  <tr>
+                    <td>Posts</td>
+                    <td style="text-align: right;">12</td>
+                  </tr>
+                  <tr>
+                    <td>Followers</td>
+                    <td style="text-align: right;">6000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             {#each data.posts as post}
+              <h1>Posts</h1>
               <div>
                 <PostCard {post} />
               </div>
@@ -49,11 +68,6 @@
             <div class="pannel_left_footer" />
           </div>
         </div>
-        <!-- <div class="panel_right">
-          <div class="widget1">
-            <PostPopularWidget posts={data.popular} />
-          </div>
-        </div> -->
       </div>
     {/if}
   </div>
@@ -99,7 +113,7 @@
     font-weight: 600;
   }
 
-  .pannel_left_inner {
+  .panel_left_inner {
     max-width: 728px;
     width: 100%;
     padding-bottom: 54px;
@@ -123,9 +137,23 @@
     overflow-y: auto; */
   }
 
+  .user_header {
+    padding: 24px;
+  }
+
   .widget1 {
     height: 100%;
     width: 100%;
+  }
+
+  h1 {
+    margin-left: 22px;
+    margin-bottom: 0px;
+  }
+
+  .styled_table {
+    width: 100%;
+    max-width: 444px;
   }
 
   @media (max-width: 903.98px) {
