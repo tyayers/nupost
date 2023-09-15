@@ -98,7 +98,7 @@ export class DataServiceGoogle implements DataService {
             this.localUser = newUser;
             this.user.update((n) => this.localUser);
 
-            if (!this.localUser.handleSetByUser) {
+            if (!this.localUser.handleSetByUser || window.location.pathname == "/handle") {
               this.Navigate("/handle");
             }
             else if (window.location.pathname != "/") {

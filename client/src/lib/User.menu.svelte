@@ -20,6 +20,7 @@
 </script>
 
 {#if user}
+  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <img
     on:click|stopPropagation={() => (menuVisible = !menuVisible)}
     on:keydown|stopPropagation={() => (menuVisible = !menuVisible)}
@@ -35,7 +36,8 @@
     <div class="arrow" />
     <div class="menu">
       <div class="panel">
-        <div class="result"><a href="/admin">Admin</a></div>
+        <div class="result"><a href="/settings">Settings</a></div>
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div class="result" on:mousedown={signOut}>Sign out</div>
       </div>
     </div>

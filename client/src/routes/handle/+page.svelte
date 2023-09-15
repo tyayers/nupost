@@ -20,9 +20,13 @@
       });
     }
 
-    function submitHandle() {
-      appService.SetHandle(handleInput).then((result) => {
-        history.back();
+    function cancel() {
+      submitHandle(localUser.handle);
+    }
+
+    function submitHandle(newHandle: string) {
+      appService.SetHandle(newHandle).then((result) => {
+        appService.Navigate("/home")
       });
     }
   </script>
@@ -31,12 +35,12 @@
     <Header />
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="popup_dialog" on:click={() => { appService.Navigate("/home") }}>
+    <div class="popup_dialog" on:click={cancel}>
       <div class="popup_dialog_content" on:click|stopPropagation={() => {}}>
           <h1>Welcome {localUser.handle}!</h1>
           <br/>
           <div>
-            Your handle was automatically generated, you can set a new, free handle here.
+            Your handle was automatically generated. You can set a new handle that is available, if you wish.
             <br /><br />
             <input placeholder="New user handle" autofocus class:handleExists
               bind:value={handleInput}
@@ -53,7 +57,7 @@
               </div>            
             {/if}
             <br />
-            <button class="submit_button" on:click={submitHandle}>Submit</button>
+            <button class="submit_button" on:click={() => submitHandle(handleInput)}>Save</button>
           </div>
       </div>
     </div>
