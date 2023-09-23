@@ -297,7 +297,11 @@ func GetPopularPosts(start int, limit int) []data.PostHeader {
 
 	for _, v := range keys {
 		for i := range index.IndexPopularityLikes[v] {
-			postsByPopularity = append(postsByPopularity, index.Index[index.IndexPopularityLikes[v][i]])
+			post, ok := index.Index[index.IndexPopularityLikes[v][i]]
+
+			if ok && !post.Deleted {
+				postsByPopularity = append(postsByPopularity, index.Index[index.IndexPopularityLikes[v][i]])
+			}
 
 			if len(postsByPopularity) >= limit {
 				break

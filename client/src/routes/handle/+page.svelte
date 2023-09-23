@@ -57,7 +57,7 @@
               </div>            
             {/if}
             <br />
-            <button class="submit_button" on:click={() => submitHandle(handleInput)}>Save</button>
+            <button class="submit_button button_big_primary" on:click={() => submitHandle(handleInput)}>Save</button>
           </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ img {
     border-radius: 10px;
 }
 
-button {
+.button_big_primary {
     background: rgb(26, 137, 23);
     color: rgb(255, 255, 255);
     line-height: 20px;
