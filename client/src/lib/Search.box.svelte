@@ -81,6 +81,7 @@
       <div class="results">
         <div class="panel">
           {#each results as res, i}
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
               class="result"
               on:click={() => {

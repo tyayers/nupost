@@ -62,6 +62,7 @@
 
 <div class:headersmall={small === true} class="header">
   <div class="left">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="logo_box" on:click={goHome} on:keydown={goHome}>
       <!-- <img class="logo" src={LogoPath} alt="Site logo" /> -->
       <!-- <span class="title">ggo-1 blog</span> -->
@@ -80,6 +81,7 @@
     {:else if localUserState == UserState.SignedIn}
       {#if actionType === HeaderButton.NewPost}
         <div class="post">
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div class="postbutton" on:mousedown={newPost}>
             <svg
               width="24"
@@ -142,12 +144,6 @@
     justify-content: center;
     margin-left: 34px;
     cursor: pointer;
-  }
-
-  .logo {
-    position: relative;
-    /* top: 10px; */
-    height: 44px;
   }
 
   .title {

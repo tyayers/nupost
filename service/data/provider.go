@@ -65,6 +65,7 @@ type User struct {
 	DisplayName     string `json:"displayName"`
 	Email           string `json:"-"`
 	ProfileText     string `json:"profileText"`
+	JoinDate        string `json:"joinDate"`
 	PhotoURL        string `json:"photoURL"`
 	ProviderId      string `json:"-"`
 	EmailVerified   bool   `json:"-"`

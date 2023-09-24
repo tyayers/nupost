@@ -36,7 +36,7 @@
     <div class="arrow" />
     <div class="menu">
       <div class="panel">
-        <div class="result"><a href="/settings">Settings</a></div>
+        <div class="result"><a href="/account">Account</a></div>
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div class="result" on:mousedown={signOut}>Sign out</div>
       </div>

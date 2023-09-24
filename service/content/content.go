@@ -133,6 +133,7 @@ func SignIn(user data.User) data.User {
 	if !ok {
 		usersMutex.Lock()
 		user.Handle = strings.ToLower(strings.Replace(user.DisplayName, " ", "_", -1)) + RandomString(3)
+		user.JoinDate = time.Now().Format("2006-01-02T15:04:05-0700")
 		index.IndexUsersHandles[user.Handle] = user.UID
 		index.IndexUsers[user.UID] = user
 		usersMutex.Unlock()
@@ -142,6 +143,10 @@ func SignIn(user data.User) data.User {
 		oldUser.PhotoURL = user.PhotoURL
 		oldUser.Email = user.Email
 		oldUser.EmailVerified = user.EmailVerified
+		if oldUser.JoinDate == "" {
+			// Join date was never set, set now.
+			oldUser.JoinDate = time.Now().Format("2006-01-02T15:04:05-0700")
+		}
 
 		usersMutex.Lock()
 		if oldUser.Handle == "" {
@@ -396,7 +401,7 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 
 	var createTime = time.Now()
 
-	newPost.Header.Id = time.Now().Format("20060102_") + RandomString(12)
+	newPost.Header.Id = createTime.Format("20060102_") + RandomString(12)
 	// newPost.Header.Id = time.Now().Format("20060102_150405.99_") + strings.Replace(strings.ToLower(newPost.Title), " ", "_", -1)
 	// newPost.Header.Id = time.Now().Format("20060102_") + strings.Replace(strings.ToLower(newPost.Header.Title), " ", "_", -1)
 	newPost.Files = []string{}

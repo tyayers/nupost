@@ -67,6 +67,7 @@ export type AppUser = {
   displayName?: string;
   handle?: string;
   handleSetByUser?: boolean;
+  joinDate?: string;
   phoneNumber?: string;
   photoURL?: string;
   providerId?: string;

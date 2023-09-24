@@ -5,7 +5,7 @@ import { UserState } from "$lib/DataInterface";
 
 export const load: PageLoad = (({ params }) => {
   return {
-    post: appService.GetPost(params.slug),
+    post: appService.GetPost(params.slug, false),
     comments: appService.GetComments(params.slug),
     popular: appService.GetPopularPosts(),
   };
