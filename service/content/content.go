@@ -364,6 +364,18 @@ func GetUserPosts(userHandle string, start int, limit int) []data.PostHeader {
 		postIndex := start
 		for postIndex < len(posts) && len(userPosts) < limit {
 			post, ok := index.Index[index.IndexTime[posts[postIndex]]]
+			post.Upvotes = index.IndexCountLikes[post.Id]
+			post.CommentCount = index.IndexCountComments[post.Id]
+			post.Author = index.IndexUsers[post.AuthorId]
+
+			// Test if user is following post author
+			_, follow_ok := index.IndexUsersFollowers[post.AuthorId][userId]
+			if follow_ok {
+				post.UserFollowing = true
+			} else {
+				post.UserFollowing = false
+			}
+
 			if ok {
 				userPosts = append(userPosts, post)
 			}

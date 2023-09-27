@@ -28,7 +28,6 @@
     userPopupTimer = setTimeout(() => {
       userPopupVisible = true;
     }, 500);
-    
   }
 
   function hideUserPopup() {
@@ -48,9 +47,15 @@
     <a href={"/posts/" + post.id}>
       <div class="frame">
         {#if userPopupVisible}
-          <UserPopup onEnter={showUserPopup} onLeave={hideUserPopup} 
-          {localUser} user={post.author} userFollowing={post.userFollowing}
-          size="small" {followingChanged} />
+          <UserPopup
+            onEnter={showUserPopup}
+            onLeave={hideUserPopup}
+            {localUser}
+            user={post.author}
+            userFollowing={post.userFollowing}
+            size="small"
+            {followingChanged}
+          />
         {/if}
         <div class="user">
           <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -63,7 +68,9 @@
             />
           </div>
           <div class="byline">
-            <a href={"/" + post.author.handle}>{post.authorDisplayName}</a> · {new Date(post.created).toDateString()}
+            <a href={"/" + post.author.handle}>{post.authorDisplayName}</a> · {new Date(
+              post.created
+            ).toDateString()}
           </div>
         </div>
         <div class="content">
@@ -172,7 +179,6 @@
     height: 100%;
     /* margin-bottom: auto; */
   }
-
 
   .tags_box {
     /* margin-left: 23px; */
