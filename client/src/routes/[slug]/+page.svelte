@@ -59,8 +59,8 @@
                 </tbody>
               </table>
             </div>
+            <h1>Posts</h1>
             {#each data.posts as post}
-              <h1>Posts</h1>
               <div>
                 <PostCard {post} />
               </div>

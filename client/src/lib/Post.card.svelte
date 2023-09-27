@@ -63,7 +63,7 @@
             />
           </div>
           <div class="byline">
-            {post.authorDisplayName} · {new Date(post.created).toDateString()}
+            <a href={"/" + post.author.handle}>{post.authorDisplayName}</a> · {new Date(post.created).toDateString()}
           </div>
         </div>
         <div class="content">

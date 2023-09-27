@@ -115,7 +115,7 @@
       <div class="bylines">
         <div class="byline_left">
           <div class="byline_author">
-            {post.header.authorDisplayName}
+            <a href={"/" + post.header.author.handle}>{post.header.authorDisplayName}</a>
           </div>
           <div class="byline_details">
             {new Date(post.header.created).toDateString()} · 2 min read · Listen
