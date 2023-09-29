@@ -9,6 +9,7 @@ type PostIndex struct {
 	IndexPopularityLikes    map[int][]string
 	IndexPopularityViews    map[int][]string
 	IndexPopularityComments map[int][]string
+	IndexPopularityTags     map[string]map[string][]int
 	IndexCountLikes         map[string]int
 	IndexCountComments      map[string]int
 	IndexCountViews         map[string]int

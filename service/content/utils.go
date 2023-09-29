@@ -23,6 +23,7 @@ func InitializeProvider() data.PostIndex {
 		IndexPopularityLikes:    map[int][]string{},
 		IndexPopularityViews:    map[int][]string{},
 		IndexPopularityComments: map[int][]string{},
+		IndexPopularityTags:     map[string]map[string][]int{},
 		IndexTags:               map[string]map[int]string{},
 		IndexCountLikes:         map[string]int{},
 		IndexCountComments:      map[string]int{},
@@ -92,6 +93,12 @@ func InitializeProvider() data.PostIndex {
 
 	if len(index.IndexPopularityViews) == 0 {
 		index.IndexPopularityViews[0] = []string{}
+	}
+
+	postBytes, err = dataProvider.DownloadFile("index_popularity_tags.json")
+
+	if err == nil {
+		json.Unmarshal(postBytes, &index.IndexPopularityTags)
 	}
 
 	postBytes, err = dataProvider.DownloadFile("index_count_likes.json")
@@ -236,6 +243,17 @@ func FinalizeProvider(persistMode data.PersistMode, index data.PostIndex) {
 		}
 
 		dataProvider.UploadFile("index_popularity_views.json", jsonData)
+	}
+
+	// Persist popularity tags index
+	if persistMode == data.PersistAll || persistMode == data.PersistOnlyPopularityViews {
+		jsonData, err := json.Marshal(index.IndexPopularityTags)
+		if err != nil {
+			fmt.Printf("could not marshal json: %s\n", err)
+			return
+		}
+
+		dataProvider.UploadFile("index_popularity_tags.json", jsonData)
 	}
 
 	// Persist count likes index

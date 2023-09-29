@@ -460,6 +460,19 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 					}
 
 					index.IndexTags[tag][newPost.Header.Index] = newPost.Header.Id
+
+					// Add to daily tag popularity map
+					todayDate := createTime.Format("2006-01-02")
+					_, ok = index.IndexPopularityTags[todayDate]
+					if !ok {
+						index.IndexPopularityTags[todayDate] = map[string][]int{}
+					}
+
+					_, ok = index.IndexPopularityTags[todayDate][tag]
+					if !ok {
+						index.IndexPopularityTags[todayDate][tag] = []int{1}
+					}
+
 				}
 			}
 		}
