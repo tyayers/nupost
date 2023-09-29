@@ -23,7 +23,7 @@ func InitializeProvider() data.PostIndex {
 		IndexPopularityLikes:    map[int][]string{},
 		IndexPopularityViews:    map[int][]string{},
 		IndexPopularityComments: map[int][]string{},
-		IndexPopularityTags:     map[string]map[string][]int{},
+		IndexPopularityTags:     map[string]map[string]int{},
 		IndexTags:               map[string]map[int]string{},
 		IndexCountLikes:         map[string]int{},
 		IndexCountComments:      map[string]int{},

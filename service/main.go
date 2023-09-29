@@ -137,6 +137,18 @@ func getPopularPosts(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, content.GetPopularPosts(start, limit))
 }
 
+func getPopularTags(c *gin.Context) {
+	scope := c.GetString("scope")
+
+	if scope == "" {
+		scope = "week"
+	}
+
+	result := content.GetPopularTagsForWeek(20)
+
+	c.IndentedJSON(http.StatusOK, result)
+}
+
 func getTaggedPosts(c *gin.Context) {
 	tagName := c.Param("name")
 
@@ -563,6 +575,7 @@ func main() {
 	router.DELETE("/posts/:id", jwtValidation(), deletePost)
 
 	router.GET("/tags/:name", getTaggedPosts)
+	router.GET("/tags/popular", getPopularTags)
 	router.GET("/tags/search", searchTags)
 
 	router.GET("/admin/data", getData)

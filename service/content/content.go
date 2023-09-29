@@ -321,6 +321,45 @@ func GetPopularPosts(start int, limit int) []data.PostHeader {
 	return postsByPopularity
 }
 
+func GetPopularTagsForWeek(count int) []string {
+	// result := []string{}
+	tagCounter := map[string]int{}
+
+	dayCounter := 7
+	day := time.Now()
+	dayString := day.Format("2006-01-02")
+
+	for dayCounter > 0 {
+		dayTags, ok := index.IndexPopularityTags[dayString]
+		if ok {
+			for key, value := range dayTags {
+				_, ok = tagCounter[key]
+				if !ok {
+					tagCounter[key] = value
+				} else {
+					tagCounter[key] += value
+				}
+			}
+		}
+
+		day = day.AddDate(0, 0, -1)
+		dayString = day.Format("2006-01-02")
+		dayCounter--
+	}
+
+	// Now sort by number of posts per tag
+	keys := make([]string, 0, len(tagCounter))
+	for k := range tagCounter {
+		keys = append(keys, k)
+	}
+
+	sort.SliceStable(keys, func(i, j int) bool {
+		return tagCounter[keys[i]] < tagCounter[keys[j]]
+	})
+
+	return keys
+}
+
 func GetTaggedPosts(tagName string, start int, limit int) []data.PostHeader {
 	taggedPosts := []data.PostHeader{}
 
@@ -465,14 +504,13 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 					todayDate := createTime.Format("2006-01-02")
 					_, ok = index.IndexPopularityTags[todayDate]
 					if !ok {
-						index.IndexPopularityTags[todayDate] = map[string][]int{}
+						index.IndexPopularityTags[todayDate] = map[string]int{}
 					}
 
 					_, ok = index.IndexPopularityTags[todayDate][tag]
 					if !ok {
-						index.IndexPopularityTags[todayDate][tag] = []int{1}
+						index.IndexPopularityTags[todayDate][tag] = 1
 					}
-
 				}
 			}
 		}
