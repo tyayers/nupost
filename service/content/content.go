@@ -476,6 +476,13 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 				}
 			}
 		}
+
+		// Add to user post count
+		val, ok := index.IndexUsers[newPost.Header.AuthorId]
+		if ok {
+			val.PostsCount++
+			index.IndexUsers[newPost.Header.AuthorId] = val
+		}
 	}
 
 	// Add to user index
@@ -563,6 +570,13 @@ func UpdatePost(updatedPost *data.Post, attachments []multipart.FileHeader) erro
 					index.IndexTags[tag][updatedPost.Header.Index] = updatedPost.Header.Id
 				}
 			}
+		}
+
+		// Add to user post count
+		val, ok := index.IndexUsers[updatedPost.Header.AuthorId]
+		if ok {
+			val.PostsCount++
+			index.IndexUsers[updatedPost.Header.AuthorId] = val
 		}
 
 		// Persist changes to storage in the background
