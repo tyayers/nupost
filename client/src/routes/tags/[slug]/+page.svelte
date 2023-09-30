@@ -1,7 +1,7 @@
 <script lang="ts">
   import Header from "../../../lib/Header.svelte";
   import PostCard from "../../../lib/Post.card.svelte";
-  import PostPopularWidget from "../../../lib/Post.popular.svelte";
+  import PostPopularWidget from "../../../lib/Popular.posts.svelte";
 
   import { appService } from "$lib/DataService";
   import type { PostOverviewCollection } from "$lib/DataInterface";

@@ -22,6 +22,7 @@ export interface DataService {
   SearchTags(input: string): Promise<SearchResult[]>;
   GetPosts(start: number, limit: number): Promise<PostOverview[]>;
   GetPopularPosts(): Promise<PostOverview[]>;
+  GetPopularTags(): Promise<string[]>;
   GetTaggedPosts(
     tagName: string,
     start: number,

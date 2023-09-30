@@ -7,5 +7,6 @@ export const load: PageLoad = (({ params }) => {
   return {
     posts: appService.GetPosts(0, 5),
     popular: appService.GetPopularPosts(),
+    popularTags: appService.GetPopularTags()
   };
 }) satisfies PageLoad;

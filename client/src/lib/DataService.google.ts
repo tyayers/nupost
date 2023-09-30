@@ -355,6 +355,26 @@ export class DataServiceGoogle implements DataService {
     });
   }
 
+  GetPopularTags(): Promise<string[]> {
+    return new Promise<string[]>((resolve, reject) => {
+      this.GetIdToken().then((idToken) => {
+        fetch(this.defaultServer + "/tags/popular", {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + idToken,
+          },
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data: string[]) => {
+            resolve(data);
+          });
+      });
+    });
+  }
+
   GetPost(postId: string, draft = false): Promise<Post> {
     return new Promise<Post>((resolve, reject) => {
       this.GetIdToken().then((idToken) => {

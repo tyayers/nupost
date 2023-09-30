@@ -481,46 +481,50 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 	if newPost.Header.Draft {
 		index.IndexDrafts[newPost.Header.Id] = newPost.Header.Index
 	} else {
+		// NEW POSTS ARE ALWAYS DRAFTS, SO REMOVING FOR NOW...
 		// Add to popularity indexes
-		index.IndexPopularityLikes[0] = append(index.IndexPopularityLikes[0], newPost.Header.Id)
-		index.IndexPopularityComments[0] = append(index.IndexPopularityComments[0], newPost.Header.Id)
-		index.IndexPopularityViews[0] = append(index.IndexPopularityViews[0], newPost.Header.Id)
+		// index.IndexPopularityLikes[0] = append(index.IndexPopularityLikes[0], newPost.Header.Id)
+		// index.IndexPopularityComments[0] = append(index.IndexPopularityComments[0], newPost.Header.Id)
+		// index.IndexPopularityViews[0] = append(index.IndexPopularityViews[0], newPost.Header.Id)
 
 		// Add to tag index
-		if newPost.Header.Tags != nil {
-			for _, tag := range newPost.Header.Tags {
+		// New posts don't have tags, so removing for now...
+		// if newPost.Header.Tags != nil {
+		// 	for _, tag := range newPost.Header.Tags {
 
-				if tag != "" {
-					_, ok := index.IndexTags[tag]
+		// 		if tag != "" {
+		// 			_, ok := index.IndexTags[tag]
 
-					if !ok {
-						index.IndexTags[tag] = map[int]string{}
-						tagIndex.Index(tag, tag)
-					}
+		// 			if !ok {
+		// 				index.IndexTags[tag] = map[int]string{}
+		// 				tagIndex.Index(tag, tag)
+		// 			}
 
-					index.IndexTags[tag][newPost.Header.Index] = newPost.Header.Id
+		// 			index.IndexTags[tag][newPost.Header.Index] = newPost.Header.Id
 
-					// Add to daily tag popularity map
-					todayDate := createTime.Format("2006-01-02")
-					_, ok = index.IndexPopularityTags[todayDate]
-					if !ok {
-						index.IndexPopularityTags[todayDate] = map[string]int{}
-					}
+		// 			// Add to daily tag popularity map
+		// 			todayDate := createTime.Format("2006-01-02")
+		// 			_, ok = index.IndexPopularityTags[todayDate]
+		// 			if !ok {
+		// 				index.IndexPopularityTags[todayDate] = map[string]int{}
+		// 			}
 
-					_, ok = index.IndexPopularityTags[todayDate][tag]
-					if !ok {
-						index.IndexPopularityTags[todayDate][tag] = 1
-					}
-				}
-			}
-		}
+		// 			_, ok = index.IndexPopularityTags[todayDate][tag]
+		// 			if !ok {
+		// 				index.IndexPopularityTags[todayDate][tag] = 1
+		// 			} else {
+		// 				index.IndexPopularityTags[todayDate][tag]++
+		// 			}
+		// 		}
+		// 	}
+		// }
 
 		// Add to user post count
-		val, ok := index.IndexUsers[newPost.Header.AuthorId]
-		if ok {
-			val.PostsCount++
-			index.IndexUsers[newPost.Header.AuthorId] = val
-		}
+		// val, ok := index.IndexUsers[newPost.Header.AuthorId]
+		// if ok {
+		// 	val.PostsCount++
+		// 	index.IndexUsers[newPost.Header.AuthorId] = val
+		// }
 	}
 
 	// Add to user index
@@ -549,7 +553,8 @@ func CreatePost(newPost *data.Post, attachments []multipart.FileHeader) error {
 
 func UpdatePost(updatedPost *data.Post, attachments []multipart.FileHeader) error {
 
-	updatedPost.Header.Updated = time.Now().Format("2006-01-02T15:04:05-0700")
+	updateTime := time.Now()
+	updatedPost.Header.Updated = updateTime.Format("2006-01-02T15:04:05-0700")
 
 	files := map[string][]byte{}
 	for _, attachment := range attachments {
@@ -606,6 +611,20 @@ func UpdatePost(updatedPost *data.Post, attachments []multipart.FileHeader) erro
 					}
 
 					index.IndexTags[tag][updatedPost.Header.Index] = updatedPost.Header.Id
+
+					// Add to daily tag popularity map
+					todayDate := updateTime.Format("2006-01-02")
+					_, ok = index.IndexPopularityTags[todayDate]
+					if !ok {
+						index.IndexPopularityTags[todayDate] = map[string]int{}
+					}
+
+					_, ok = index.IndexPopularityTags[todayDate][tag]
+					if !ok {
+						index.IndexPopularityTags[todayDate][tag] = 1
+					} else {
+						index.IndexPopularityTags[todayDate][tag]++
+					}
 				}
 			}
 		}
@@ -619,12 +638,12 @@ func UpdatePost(updatedPost *data.Post, attachments []multipart.FileHeader) erro
 
 		// Persist changes to storage in the background
 		go Finalize(data.PersistAll)
-	} else {
-		UpdateTags(header.Id, header.Index, header.Tags, updatedPost.Header.Tags)
-		header.Tags = updatedPost.Header.Tags
-		header.FileCount = updatedPost.Header.FileCount
-		header.Updated = updatedPost.Header.Updated
 	}
+
+	UpdateTags(header.Id, header.Index, header.Tags, updatedPost.Header.Tags)
+	header.Tags = updatedPost.Header.Tags
+	header.FileCount = updatedPost.Header.FileCount
+	header.Updated = updatedPost.Header.Updated
 
 	index.Index[updatedPost.Header.Id] = header
 	postsMutex.Unlock()

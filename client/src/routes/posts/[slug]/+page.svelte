@@ -3,7 +3,7 @@
   import PostHeader from "../../../lib/Post.header.svelte";
   import PostFooter from "../../../lib/Post.footer.svelte";
   import Comments from "../../../lib/Comments.svelte";
-  import PostPopularWidget from "../../../lib/Post.popular.svelte";
+  import PostPopularWidget from "../../../lib/Popular.posts.svelte";
 
   import type {
     PostOverviewCollection,
