@@ -37,7 +37,7 @@
       <div class="container">
         <div class="panel_left">
           <div class="pannel_left_inner">
-            <div class="tag_title">{ToTitleCase(data.tagName)}</div>
+            <div class="tag_title">#{ToTitleCase(data.tagName)}</div>
             {#each data.posts as post}
               <div>
                 <PostCard {post} />

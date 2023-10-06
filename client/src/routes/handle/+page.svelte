@@ -40,8 +40,9 @@
           <h1>Welcome {localUser.handle}!</h1>
           <br/>
           <div>
-            Your handle was automatically generated. You can set a new handle that is available, if you wish.
+            Your current handle (user name) is <b>{localUser.handle}</b>. You can set a new handle, providing that it is available, here.
             <br /><br />
+            <!-- svelte-ignore a11y-autofocus -->
             <input placeholder="New user handle" autofocus class:handleExists
               bind:value={handleInput}
               on:keyup|stopPropagation={testIfHandleExists}

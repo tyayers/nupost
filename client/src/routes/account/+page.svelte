@@ -42,12 +42,14 @@
     <Header />
   
     <div class="content">
-      {#if localUser}
+      {#if localUser && localUser.handle}
         <div class="container">
           <div class="panel_left">
             <div class="panel_left_inner">
               <div class="tag_title">@{localUser.handle} 
-                <svg
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <svg on:click={() => appService.Navigate("/handle")}
                 style="position: relative; top: -8px; cursor: pointer;"
                 width="24"
                 height="24"
@@ -85,15 +87,15 @@
                     </tr>
                     <tr>
                       <td>Posts</td>
-                      <td style="text-align: right;"><button>Open</button></td>
+                      <td style="text-align: right;"><button class="button_small_secondary">Open</button></td>
                     </tr>
                     <tr>
                       <td>Drafts</td>
-                      <td style="text-align: right;"><button>Open</button></td>
+                      <td style="text-align: right;"><button class="button_small_secondary">Open</button></td>
                     </tr>
                     <tr>
                       <td>Delete Account</td>
-                      <td style="text-align: right;"><button>Delete</button></td>
+                      <td style="text-align: right;"><button class="button_small_primary">Delete</button></td>
                     </tr>                    
                   </tbody>
                 </table>

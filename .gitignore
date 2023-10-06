@@ -18,6 +18,7 @@ vite.config.ts.timestamp-*
 localdata
 posts.bleve
 tags.bleve
+__debug_*
 
 # Binaries for programs and plugins
 *.exe

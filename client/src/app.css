@@ -45,6 +45,32 @@ img {
     font-weight: 400;
 }
 
+.button_small_primary {
+    cursor: pointer;
+    user-select: none;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    height: 26px;
+    width: 65px;
+    background: #1a8917;
+    border-color: #1a8917;
+    color: white;    
+}
+
+.button_small_secondary {
+    cursor: pointer;
+    user-select: none;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    height: 26px;
+    width: 65px;
+    background: #f7f7f7;
+    border-color: #acacac;
+    color: rgb(94 94 94);
+}
+
 input {
     outline: 0px;
     border-width: 0px;
