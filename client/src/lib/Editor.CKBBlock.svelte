@@ -36,16 +36,8 @@
   export let saveDraft: () => void;
 
   function initCkeditor() {
-    appService.GetIdToken().then((token) => {
-      BalloonBlockEditor.create(document.querySelector("#content"), {
+    BalloonBlockEditor.create(document.querySelector("#content"), {
         placeholder: "Add your content here...",
-        simpleUpload: {
-          uploadUrl: appService.GetServer("IMAGE") + imageUploadPath,
-          withCredentials: true,
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        },
         autosave: {
           save(editor) {
             //return saveData( editor.getData() );
@@ -62,7 +54,6 @@
           editor.setData(initialData);
         }
       });
-    });
   }
 
   onMount(async function () {

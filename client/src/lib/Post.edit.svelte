@@ -36,19 +36,8 @@
     // Mark as draft
     formData.set("draft", "true");
 
-    appService.CreatePost(formData).then((newPost: Post) => {
-      post = newPost;
-      initializedFlag = true;
-    });
+    initializedFlag = true;
   }
-
-  onDestroy(() => {
-    if (isNewPost && post.header.title == "") {
-      // This post was never really started, so delete before leaving...
-      initializedFlag = false;
-      appService.DeletePost(post.header.id);
-    }
-  });
 
   export function submit(draft: boolean = false) {
     var myForm: HTMLFormElement = document.getElementById(
@@ -148,9 +137,8 @@
 
     <div>
       <br />
-      {#if post}
+      {#if initializedFlag}
         <Editor
-          imageUploadPath={"/posts/" + post.header.id + "/files"}
           {saveDraft}
         />
       {/if}

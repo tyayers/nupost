@@ -5,7 +5,7 @@
   
     import { appService } from "$lib/DataService";
     import type {
-  AppUser,
+      AppUser,
       PostOverview,
       PostOverviewCollection,
     } from "$lib/DataInterface";
